@@ -1,0 +1,107 @@
+---
+title: "Aula 2 - Data Frame"
+author: "Manoel Galdino"
+date: "27 de maio de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Data.frame
+
+Quando temos uma base de dados, em geral temos dados de vários tipos. Assim, não podemos usar matrizes para banco de dados. Para isso temo o data.frame. o Data frame nada mais é que uma combinação de listas. Mas para nós, que estamos começando, podemos pensar como uma mariz que admite colunas de tipos diferentes, embora dentro de cada coluna seja sempre o mesmo tipo.
+
+```{r}
+ df1 <- data.frame(var1=1:4, var2=rep("a", 4), var3=rep(c(T,F), each=2))
+df1
+
+dim(df1)
+head(df1)
+tail(df1)
+
+## Para acessar as colunas, podemos fazer como lista ou matriz
+df1$var1
+df1[,1]
+
+df1$var2
+df1[,2]
+
+df1$var3[c(1,3)]
+df1[c(1,3),2]
+
+mode(df1$var1)
+mode(df1$var2)
+mode(df1$var3)
+
+## MAs quero evitar aqui no curso esse tipo de coisa. Estou falando apenas porque às vezes é útil, e muita gente usa isso, então é bom vocês saberem que existe.
+
+
+## Nós queríamos que var 2 fosse character
+## o R tem um outro tipo de variável, chamado factor
+## Basicamente, são variáveis categóricas
+## tem que usar stringsAsFactorst=F. Ver o help
+
+?data.frame
+df1 <- data.frame(var1=1:4, var2=rep("a", 4), var3=rep(c(T,F), each=2), 
+                  stringsAsFactors=F)
+
+mode(df1$var1)
+mode(df1$var2)
+mode(df1$var3)
+
+nrow(df)
+ncol(df)
+dim(df)
+
+## outra forma de acessar
+df1["var1"]
+df1[["var1"]]
+
+# data.frame é uma lista!
+mode(df1["var1"])
+class(df1["var1"])
+
+mode(df1[["var1"]])
+class(df1[["var1"]])
+
+## Classe é uma característica de linguagens de programação orientada a objetos
+## Não vou entrar aqui na distinção. Não temos tempo para esse detalhe.
+# algumas métodos só valem para algumas classes de objetos
+# no geral, falamos mais de classe que mode.
+```
+
+### carregando bibliotecas
+
+Às vezes queremos fazer alguma coisa que o R não tem uma função pronta. E nós podemos desenvolver nossa  própria função. E a gente pode compartilhar nossas funções com o mundo, seja por mei ode scripts, seja por meio de bibliotecas. As bibliotecas são um conjunto de funções, que alguém fez, e disponibilizou. Para carregá-las, basta instalar o capote que contém a biblioteca, e deois carregas a biblioteca.
+
+```{r}
+## Exemplo
+### Biblioteca dplyr, de manipulacão de banco de dados
+## tentem rodar esse comando abaixo
+# filter(df1, var1 > 2)
+
+## deu erro, né?
+# agora vamos instalar a bilbioteca
+# intall.packages("dplyr")
+# carregando biblioteca
+library(dplyr)
+df1
+
+filter(df1, var1 > 2)
+
+```
+
+### Manipulando banco de dados com Dplyr
+
+Antes de analisar dados, a gente precisa ser capaz de importar os dados no R, manipulá-los, e só então fazer a análise de dados. Em minha experiência, eu gasto mais de 50% do tempo na fase de importação e manipulação, e o restante na análise. Diria que em análise pura, são uns 20%. O resto do tempo é manipulando o banco de dados.
+
+Hoje em dia o R tem uma biblioteca, dplyr, que facilitar muito a manipulação de banco de dados. Vamos portanto introduzir o dplyr para vocês e utilizá-los quase que exclusivamente para manipulação de banco de dados.
+
+Antes, porém, vamos importar alguns bancos de dados, que muitas vezes dão dor de cabeça.
+
+'http://dados.prefeitura.sp.gov.br/api/action/datastore_search_sql?sql=SELECT * from "f944b957-2193-48a4-9068-72a26e6ee577" limit 10'
+
+url_2014 <- "http://dados.prefeitura.sp.gov.br/dataset/f944b957-2193-48a4-9068-72a26e6ee577/resource/fd72d932-fc65-43cc-a74f-f309225f74e8/download/deinfosacadsau2014.csv"
+
