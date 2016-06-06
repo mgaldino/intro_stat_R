@@ -1,0 +1,149 @@
+---
+title: "Aula - Simulacao"
+author: "Manoel Galdino"
+date: "27 de maio de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Simulação
+
+Em estatística (ou econometria) é comum aprender um monte de teorema que vai justificar as análises estatísticas, em geral recorrendo a propriedades assintóticas. Ou seja, qndo n vai para infinito. O problema portanto dessa abordagem é que ela é pesada na matemática (não um problema se você tem o conhecimento para tal) e porque nem sempre é claro o que acontece quando o n é finito (e o n sempre é finito).
+
+Como solução, a gente pode aprender por simulação. A vantagem é que podemos entender com o n finito, e precisamos de menos matemática. Por outro lado, precisamos aprender a programar (um pouco) e os resultados não são garantidos como os de um teorema.
+
+Aqui vamos aprender a analisar dados a partir de simulação.
+
+## Processo de Geração dos Dados
+Para jusficar essa abordagem de análise de dados, irei fazer uma abordagem diferente da justificativa usal para análise estatística a partir de amostras. Como sabemos, é comum definir uma população alvo, da qual recolhemos uma amostra (em geral aleatória simples), calcular um estimador para essa amostra, analisar as propriedades desse estimador, e computar a incerteza associada a ele.
+
+Assim, eu tenho, digamos, a população de eleitores e quero estimar quantos votos o candidato A terá. Para isso, recolho uma amostra aleatória simples da população, calculo a proporção amostral (p-chapéu), e computo intervalo de confiança para a minha estimativa, ao nível de 95% de confiança.
+
+Nesse exemplo essa abordagem funciona. Agora imaginemos um outro exemplo. Eu quero entender o efeito da renda dos pais sobre o desempenho de crianças na escola no estado de São Paulo. E por acaso eu tenho em minhas mãos o censo escolar para todo o estado de são paulo no ano de 2015. Aqui as coisas começam a ficar complicadas. Se eu tenho o censo (portanto a população), faz sentido usar um estimador amostral para a população? Faz sentido computar o intervalo de confiança, se este depende de, ao coletar uma nova amostra, ter outros dados? Mas os dados serão sempre aqueles, posto que é o censo escolar.
+
+Uma outra forma de pensar o mesmo problema (na verdade todos os problemas), é imaginar que há um processo de geração dos dados. No caso da intenção de votos do candidato A, eu posso imaginar uma série de fatores que fazem as pessoas votarem no candidato A, e posso portanto modelar esses fatores e eles vnao gerar a intenção de votos. Como meu modelo é imperfeito, posso aproximá-lo como uma variável aleatória, que tem uma determinada distribuição de probabilidade (digamos, Normal). Nesse caso, por maior que seja meu N, jamais saberei com certeza absoluta os parâmetros do meu modelo. 
+
+Assim, passa a ser fundamental pensar nossas análises a partir de distribuições de probabilidade. Passa a ser fundamental, portanto, conhecer as distribuições mais básicas.
+
+## Amostra Aleatória com um algoritmo determinístico?
+Alguns de vocês devem estar se perguntando como é possível uma amostra aleatória, realizada por computador, que segue algoritmos determinísticos. Há algumas questões filosóficas aí que não vou entrar, mas deixe-me explicar o que queremos dizer por amostra aleatória no computador.
+
+A Rigor, nós dizemos que o computado gera números pseudo-aleatórios, pois esses números seguem um algoritmo e não são, portanto verdadeiramente aleatórios. Contudo, esses algoritmos são construídos para que os dados tenham todas as características de números aleatórios, isto é, são estatisticamente indistiguíveis de números aleatórios. Portanto, para fins práticos, podemos trabalhar como se os números gerados pelo computador fossem aleatórios.
+
+E como funcionam esses algoritmos?
+
+```{r, echo=FALSE}
+# Define variable containing url
+url1 <- "http://assets.amuniversal.com/321a39e06d6401301d80001dd8b71c47.png"
+
+```
+## Randomness
+<center><img src="`r url1`"></center>
+Fonte: http://dilbert.com/strip/2001-10-25"
+
+Basicamente, você fornece um ponto de partida (chamado de semente), e a partir daí ele gera a sequência de números. Aqui dou um exemplo simples de algoritmo, para gerar números aleatórios enre 0 e 9 (uniforme discreta) (fonte: http://programmers.stackexchange.com/questions/49232/random-number-generation-algorithm-for-human-brains):
+Passo 1:
+Escolha um número de dois dígitos (a semente). Digamos, 23.
+Passo 2: forme um novo neumero de dois dígitos: pegue o algarismo da dezena (2) e some com o algarismos da unidade *6 (3*16 = 18), u seja, 2 + 18 = 20
+Passo 3: repita o passo 2 n vezes, para obter n+1 sequências, usando como semente o últio número gerado.
+
+A sequência do exemplo é: 23 --> 20 --> 02 --> 12 --> 13 --> 19 --> 55 --> 35 --> ...
+Passo 4: os números aleatórios são os algarismos da unidade dos números gerados.
+
+No exemplo 3,0,2,2,3,9,5,...
+
+# exercício para casa
+1. Implemente uma função "my_rng"", que recebe um semente x, e o número de algorismos n, e retorna um vetor de número aleateorios de tamanho n.
+2. faça uma versão 2 da função, "my_rng2", que checa se o número da semente tem dois algarismos, e retorna erro se não for. Dica, consulte o help para "stopifnot"
+3. teste que sua função é de fato aleatória, para n < 10.
+4. Descubra um n para o qual a aleatoriedade dela fica quebrada...
+
+
+## Distribuição Binomial
+Para fins de simulação, a ideia principal a reter é que, quando dizemos que queremos simular valores de uma distribuição, isso significa que eu gostaria de poder colher uma amostra aleatória dessa distribuição. Vamos ilustrar com um exemplo.
+Suponha que eu vou jogar uma moeda dez vezes, e vou anotar o resultado da moeda (1 se for cara, 0 se coroa). 
+Eu posso manualmente jogar a moeda dez vezes e anotar os resultados, ou posso pedir ao R para simular 10 jogadas de moeda, uma vez que posso assumir que a moeda segue uma distribuição binomial com probabilidade = .5
+
+```{r}
+# No R, simulando uma binomial, 10 obs, com p = .5
+rbinom(size=1, n=10, p=.5)
+
+# como é uma amostra aleatória, se eu jogar a moeda de novo, potencialmente vou observar outros resultados. no R é a mesma coisa
+rbinom(size=1, n=10, p=.5)
+
+# de fato, cada uma de vocês provavelmente observou um resultado diferente no computador de vocês. Isso se deve ao fato de que a amostra é aleatória.
+```
+
+Contudo, como nosso algoritmo parte de uma semente, se ele partir sempre da mesma semente, irá gerar sempre o mesmo resultado.
+Vejam com esse exemplo, que todos teremos a mesma simulação:
+
+```{r}
+# espefica a semente
+set.seed(2)
+# No R, simulando uma binomial, 10 obs, com p = .5
+rbinom(size=1, n=10, p=.5)
+```
+
+## Normal
+Como sabemos, a distribuição normal é amaplamente utilizada nas análises de dados.
+Em parte pela sua conveniência matemática, e em parte por causa do teorema do limite central. O teorema do limite central diz, basicamente que a soma de variáveis aleatórias iid tendem a se distribuir como uma Normal.
+
+Vamos então entender o TLC com simuação.
+
+```{r}
+
+# Primeiro, vamos plotar dados de uma normal, para vocês lembrarem
+my_normal <- rnorm(n=10000, mean=0, sd=1) # desvio padrão, ao invés da variância, como é usual. Cuidado!
+hist(my_normal)
+
+# vamos criar três variáveis aleatórias com distribuições diferentes
+# e criar uma outra, que é o resultado da soma dessas três.
+
+# vou usar três uniformes
+x <- runif(n=10)
+y <- runif(n=10)
+w <- runif(n=10)
+
+z <- x + y + w
+hist(z)
+
+## A gente pode ver que, à medida que n cresce, mais e mais ela se aproxima da normal
+x <- runif(n=100)
+y <- runif(n=100)
+w <- runif(n=100)
+
+z <- x + y + w
+hist(z)
+
+x <- runif(n=1000)
+y <- runif(n=1000)
+w <- runif(n=1000)
+
+z <- x + y + w
+hist(z)
+```
+
+Nós podemos estar interessados em saber quão rápido z se aproxima da normal. Há várias formas de fazer isso.
+Vou fazer aqui algo simples: fazer um teste de qui-quadrado de que as duas distribuições são iguais
+
+## Simulação para ver quão rápido z se aproxima da normal, à medida que N cresce
+```{r}
+
+# preciso simular x, y e z para vários tamanhos de n
+# vou usar um loop
+vec_n <- (1:100)*100
+vec_n
+lista <- list()
+z <- list()
+
+for ( i in 1:length(vec_n)) {
+  lista$x[[i]] <- runif(n=vec_n[i])
+  lista$y[[i]] <- runif(n=vec_n[i])
+  lista$w[[i]] <- runif(n=vec_n[i])
+  z[[i]] <- lista$x[[i]] + lista$y[[i]] + lista$w[[i]]
+}
+
+```
