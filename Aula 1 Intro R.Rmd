@@ -1,5 +1,5 @@
 ---
-title: "Aula 1 Intro R"
+title: "Aula 1 Introdução ao R e Dinâmca do Curso"
 author: "Manoel Galdino"
 date: "27 de maio de 2016"
 output: html_document
@@ -9,8 +9,24 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Utilizando o R
-============================================================================
+## Curso
+
+O objetivo do nosso curso é aprender a fazer análise de dados com o R. Estou pressupondo que vocês já têm conhecimento de estatística, em graus variados, ainda que tenham esquecido a maior parte das coisas.
+
+O R é uma linguagem de programação voltada para análise de dados. Como toda linguagem de programação, requer que a gente faça exercícios para aprender efetivamente. Ou seja, praticar, praticar, praticar.
+
+Em minha experiência, gastamos mais de 50% do tempo manipulando banco de dados, antes de fazer a análise propriamente dita. Então, iremos gastar parte do curso aprendendo a manipular bancos de dados antes de fazer análises mais sofisticadas.
+
+Para a parte da análise, vou enfatizar o papel da simulação para auxiliar na análise de dados. Ainda não decidi o que irei falar sobre análise de dados (Regressão Bayesiana? Regrssão simples? Algo de machine Learning).
+
+Para a parte de programação e maniulaçnao de banco de dados, irei ensinar como ler bancos de dados csv ou do excel, como pegar dados da internet. Utilização de controle de fluxo. E as bibliotecas dplyr e tidyr para manipulação mais prática de bancos de dados. Falarei também da biblioteca ggplot para visualização de dados (incluindo mapas com dados georeferenciados).
+
+Meu e-mail: mcz.fea@gmail.com
+O código das aulas estará disponível em: https://github.com/mgaldino/intro_stat_R
+
+
+## Utilizando o R
+
 
 Cliquem em File > New File > R script
 o RStudio dividiu a tela em quatro partes. Do lado esquerdo,  em cima temos o Script, e em baixo o console. Inicialmente vamos digitar diretamente no console.
