@@ -71,6 +71,27 @@ class(df1[["var1"]])
 # algumas métodos só valem para algumas classes de objetos
 # no geral, falamos mais de classe que mode.
 ```
+Para carregar um banco de dados no R em formato txt ou csv, a principal função é:
+*read.table*. Essa função carrega os dados para o R e deve ser atribuída a um objeto para que o banco fique armazenado na memória. Um exemplo com um banco fictício, chamado dados.csv, seria ``df <- read.table("dados.csv")``.
+
+No geral, porém, será mais complexo. A primeira coisa que devemos passar para o R é o local onde está o arquivo (diretorio). A função para tal é `` setwd("caminho")``. Para saber o caminho atual (default do R), basta usar ``getwd()``.
+
+Experimentem mudar o caminho de vocês, usando a expressão ``setwd()``. Vou dar um exemplo com minha estrutura de diretório. Utilizem algo equivalente para vocês.
+Antes, vamos guardar o caminho atual.
+
+```{r}
+# guardando o caminho atual
+dirAtual <- getwd()
+```
+
+E para mudar o diretório, num exemplo do meu computador:
+```{r}
+# definindo diretorio
+setwd("/Users/natalia/Documents/Manoel")
+```
+
+Obversvação imporante. Se eu estivesse no windows, teria que passar algo como:
+`` # setwd("C:\\Users\\natalia\\Documents\\Manoel")``. Notem que eu inverti as barras, tive que colocar duas barras e ainda passar a partição/
 
 ### Importando Banco de dados no R
 
@@ -78,9 +99,10 @@ O jeito mais fácil de importar um banco de dados no R é tendo um arquivo no fo
 
 Acessem o endereço  https://github.com/mgaldino/intro_stat_R/tree/master/Dados
 E baixem o arquivo IDH_Brasil.csv
-Salvem na pasta que quiserem, e vamos então carregar o arquivo no R.
+Depois, acessem: https://github.com/mgaldino/Introd_R/tree/master/week%202/dados
+E salvem os três arquivos existentes, na mesma pasta onde salvaram o anterior.
+
 Para carregar o arquivo, devemos primeiro dizer para o R onde o arquivo está, mudando o diretório padrão para onde salvamos o arquivo.
-Para vocês obterem o dirtório padrão, basta digitarem `r getwd()`
 
 Como meu arquivo está numa outra pasta, vou modificar o diretório padrão, da seguinte forma:
 
@@ -94,6 +116,7 @@ Então, para carregar o arquivo, usaremos read.table, que como o nome diz, lê u
 A função read.table pede para especificarmos o nome do arquivo, qual o separaodr (vírgula, tabulação, que é o nosso caso), se a primeira linha é cabeçalho ou não etc.
 
 ```{r}
+setwd("/Users/natalia/Documents/Manoel/curso data analysis/dados")
 read.table(file="IDH_Brasil.csv", sep="\t", header=T)
 ```
 
@@ -101,6 +124,7 @@ Como vocês podem perceber, o R importou os dados e jogou no console.
 Mas nós queremos na verdade criar um objeto que contenha os dados. Assim, na verdade preciso atribuir o resultado da importação a um objeto:
 
 ```{r}
+setwd("/Users/natalia/Documents/Manoel/curso data analysis/dados")
 idh <- read.table(file="IDH_Brasil.csv", sep="\t", header=T)
 
 head(idh) # primeiras linhas
@@ -108,7 +132,17 @@ dim(idh) # total de linhas e colunas
 ```
 
 A tabela contém dados do IDH do Brasil por UF ao longo dos anos (retirei do livro do Jackson Aquino).
-Depois a gente analisar os dados.
+Depois a gente analisa os dados.
+
+Se rodarmos ``?read.table`` abriremos o help do R.
+Lá, vemos que a função tem muitos argumentos, a maioria nunca usaremos. Vamos comentar alguns que podem ser importantes, além dos que já usamos.
+
+*as.is* este argumento importa os dados no formato atual (tipo), sem tentar conversões. Explico um pouco mais depois.
+*na.strings* o default do R é tratar "NA" como missing. Ou seja, no excel, um missing estará como um texto NA. Porém, se for espaço em branco, ou branco,ou 999, ou -9 etc., precisarei especificar pro R que esse é o NA. Exemplo, ``read.table("nome.csv", na.strings="")`` # para branco como NA.
+*colClasses* este argumento determina as classes (tipos) das variáveis/colunas. Isso é importante se quisermos que uma variável aparentemente numérica (exemplo cep), seja lida como texto (para que zero a esquerda não seja suprimido). Exemplo de argumento seria ``read.table("nome.csv", colClasses=c("numeric", "character", "logical"))``. Neste exemplo, tenho 3 colunas, a primeira numérica, a segunda será character e a terceira lógica.
+*skip* Número de linhas que quero pular. 
+*stringAsFactors* Se vamos converter os textos como factor
+*encoding* qual a codificação do texto ("UTF-8" etc.)
 
 Vamos agora importar dados da internet num exercíco.
 Acessem o novo portal da secretaria de segurança pública.
@@ -116,6 +150,20 @@ http://www.ssp.sp.gov.br/novaestatistica/Pesquisa.aspx
 Vão em estatística, procurem o dado que quiserem, salvem em excel, e depois abram no excel (ou openoffice)
  e salvem em CSV. E tentem importar no R.
  
+Como exercício para casa, tentem importar os bancos de dados que baixamos:
+1. Abram o arquivo ISIT.xls no excel, salvem como csv (ou txt) e tentem importar no R (o arquivo talvez precise ser editado no excel para ser importado direito no R)
+2. Importem no R o arquivo receitas_candidatos_2014_SP.txt
+3. Importem no R o arquivo resultado_-_candidatos_eleitos.csv
+
+
+## Carregando dados de outros formatos ##
+# spss, stata, sas #
+
+library(foreign)
+
+Funções `` read.spss `` para ler um arquivo formatado em ``.sav``.
+
+
 
 ### carregando bibliotecas
 

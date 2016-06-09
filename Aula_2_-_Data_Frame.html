@@ -214,11 +214,21 @@ mode(df1[&quot;var1&quot;])</code></pre>
 ## Não vou entrar aqui na distinção. Não temos tempo para esse detalhe.
 # algumas métodos só valem para algumas classes de objetos
 # no geral, falamos mais de classe que mode.</code></pre>
+<p>Para carregar um banco de dados no R em formato txt ou csv, a principal função é: <em>read.table</em>. Essa função carrega os dados para o R e deve ser atribuída a um objeto para que o banco fique armazenado na memória. Um exemplo com um banco fictício, chamado dados.csv, seria <code>df &lt;- read.table(&quot;dados.csv&quot;)</code>.</p>
+<p>No geral, porém, será mais complexo. A primeira coisa que devemos passar para o R é o local onde está o arquivo (diretorio). A função para tal é <code>setwd(&quot;caminho&quot;)</code>. Para saber o caminho atual (default do R), basta usar <code>getwd()</code>.</p>
+<p>Experimentem mudar o caminho de vocês, usando a expressão <code>setwd()</code>. Vou dar um exemplo com minha estrutura de diretório. Utilizem algo equivalente para vocês. Antes, vamos guardar o caminho atual.</p>
+<pre class="r"><code># guardando o caminho atual
+dirAtual &lt;- getwd()</code></pre>
+<p>E para mudar o diretório, num exemplo do meu computador:</p>
+<pre class="r"><code># definindo diretorio
+setwd(&quot;/Users/natalia/Documents/Manoel&quot;)</code></pre>
+<p>Obversvação imporante. Se eu estivesse no windows, teria que passar algo como: <code># setwd(&quot;C:\\Users\\natalia\\Documents\\Manoel&quot;)</code>. Notem que eu inverti as barras, tive que colocar duas barras e ainda passar a partição/</p>
 </div>
 <div id="importando-banco-de-dados-no-r" class="section level3">
 <h3>Importando Banco de dados no R</h3>
 <p>O jeito mais fácil de importar um banco de dados no R é tendo um arquivo no formato csv (separado por vírgula ou ponto e vírgula) ou txt (separado por espaço ou tabulações). Vamos inicialmente importar dados desse tipo</p>
-<p>Acessem o endereço <a href="https://github.com/mgaldino/intro_stat_R/tree/master/Dados" class="uri">https://github.com/mgaldino/intro_stat_R/tree/master/Dados</a> E baixem o arquivo IDH_Brasil.csv Salvem na pasta que quiserem, e vamos então carregar o arquivo no R. Para carregar o arquivo, devemos primeiro dizer para o R onde o arquivo está, mudando o diretório padrão para onde salvamos o arquivo. Para vocês obterem o dirtório padrão, basta digitarem /Users/natalia/Documents/Manoel/curso data analysis</p>
+<p>Acessem o endereço <a href="https://github.com/mgaldino/intro_stat_R/tree/master/Dados" class="uri">https://github.com/mgaldino/intro_stat_R/tree/master/Dados</a> E baixem o arquivo IDH_Brasil.csv Depois, acessem: <a href="https://github.com/mgaldino/Introd_R/tree/master/week%202/dados">https://github.com/mgaldino/Introd_R/tree/master/week%202/dados</a> E salvem os três arquivos existentes, na mesma pasta onde salvaram o anterior.</p>
+<p>Para carregar o arquivo, devemos primeiro dizer para o R onde o arquivo está, mudando o diretório padrão para onde salvamos o arquivo.</p>
 <p>Como meu arquivo está numa outra pasta, vou modificar o diretório padrão, da seguinte forma:</p>
 <pre class="r"><code>setwd(&quot;/Users/natalia/Documents/Manoel/curso data analysis/dados&quot;)</code></pre>
 <p>Se não der nenhuma mensagem, deu certo. Então, para carregar o arquivo, usaremos read.table, que como o nome diz, lê uma tablea no R: A função read.table pede para especificarmos o nome do arquivo, qual o separaodr (vírgula, tabulação, que é o nosso caso), se a primeira linha é cabeçalho ou não etc.</p>
@@ -301,9 +311,19 @@ head(idh) # primeiras linhas</code></pre>
 ## 6 0.712 0.709 0.717 0.723</code></pre>
 <pre class="r"><code>dim(idh) # total de linhas e colunas</code></pre>
 <pre><code>## [1] 27 16</code></pre>
-<p>A tabela contém dados do IDH do Brasil por UF ao longo dos anos (retirei do livro do Jackson Aquino). Depois a gente analisar os dados.</p>
+<p>A tabela contém dados do IDH do Brasil por UF ao longo dos anos (retirei do livro do Jackson Aquino). Depois a gente analisa os dados.</p>
+<p>Se rodarmos <code>?read.table</code> abriremos o help do R. Lá, vemos que a função tem muitos argumentos, a maioria nunca usaremos. Vamos comentar alguns que podem ser importantes, além dos que já usamos.</p>
+<p><em>as.is</em> este argumento importa os dados no formato atual (tipo), sem tentar conversões. Explico um pouco mais depois. <em>na.strings</em> o default do R é tratar “NA” como missing. Ou seja, no excel, um missing estará como um texto NA. Porém, se for espaço em branco, ou branco,ou 999, ou -9 etc., precisarei especificar pro R que esse é o NA. Exemplo, <code>read.table(&quot;nome.csv&quot;, na.strings=&quot;&quot;)</code> # para branco como NA. <em>colClasses</em> este argumento determina as classes (tipos) das variáveis/colunas. Isso é importante se quisermos que uma variável aparentemente numérica (exemplo cep), seja lida como texto (para que zero a esquerda não seja suprimido). Exemplo de argumento seria <code>read.table(&quot;nome.csv&quot;, colClasses=c(&quot;numeric&quot;, &quot;character&quot;, &quot;logical&quot;))</code>. Neste exemplo, tenho 3 colunas, a primeira numérica, a segunda será character e a terceira lógica. <em>skip</em> Número de linhas que quero pular. <em>stringAsFactors</em> Se vamos converter os textos como factor <em>encoding</em> qual a codificação do texto (“UTF-8” etc.)</p>
 <p>Vamos agora importar dados da internet num exercíco. Acessem o novo portal da secretaria de segurança pública. <a href="http://www.ssp.sp.gov.br/novaestatistica/Pesquisa.aspx" class="uri">http://www.ssp.sp.gov.br/novaestatistica/Pesquisa.aspx</a> Vão em estatística, procurem o dado que quiserem, salvem em excel, e depois abram no excel (ou openoffice) e salvem em CSV. E tentem importar no R.</p>
+<p>Como exercício para casa, tentem importar os bancos de dados que baixamos: 1. Abram o arquivo ISIT.xls no excel, salvem como csv (ou txt) e tentem importar no R (o arquivo talvez precise ser editado no excel para ser importado direito no R) 2. Importem no R o arquivo receitas_candidatos_2014_SP.txt 3. Importem no R o arquivo resultado_-_candidatos_eleitos.csv</p>
 </div>
+<div id="carregando-dados-de-outros-formatos" class="section level2">
+<h2>Carregando dados de outros formatos</h2>
+</div>
+<div id="spss-stata-sas" class="section level1">
+<h1>spss, stata, sas</h1>
+<p>library(foreign)</p>
+<p>Funções <code>read.spss</code> para ler um arquivo formatado em <code>.sav</code>.</p>
 <div id="carregando-bibliotecas" class="section level3">
 <h3>carregando bibliotecas</h3>
 <p>Às vezes queremos fazer alguma coisa que o R não tem uma função pronta. E nós podemos desenvolver nossa própria função. E a gente pode compartilhar nossas funções com o mundo, seja por mei ode scripts, seja por meio de bibliotecas. As bibliotecas são um conjunto de funções, que alguém fez, e disponibilizou. Para carregá-las, basta instalar o capote que contém a biblioteca, e deois carregas a biblioteca.</p>
@@ -335,6 +355,7 @@ library(dplyr)</code></pre>
 <pre><code>##   var1 var2  var3
 ## 1    3    a FALSE
 ## 2    4    a FALSE</code></pre>
+</div>
 </div>
 
 
