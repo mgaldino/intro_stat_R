@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Data.frame
 
-Quando temos uma base de dados, em geral temos dados de vários tipos. Assim, não podemos usar matrizes para banco de dados. Para isso temo o data.frame. o Data frame nada mais é que uma combinação de listas. Mas para nós, que estamos começando, podemos pensar como uma mariz que admite colunas de tipos diferentes, embora dentro de cada coluna seja sempre o mesmo tipo.
+Quando temos uma base de dados, em geral temos dados de vários tipos. Assim, não podemos usar matrizes para banco de dados (na matriz, todas as colunas têm de ser do mesmo tipo). Para isso temos o tipo data.frame. O Data frame nada mais é que uma combinação de listas. Mas para nós, que estamos começando, podemos pensar como uma matriz que admite colunas de tipos diferentes, embora dentro de cada coluna seja sempre o mesmo tipo.
 
 ```{r}
  df1 <- data.frame(var1=1:4, var2=rep("a", 4), var3=rep(c(T,F), each=2))
@@ -72,6 +72,51 @@ class(df1[["var1"]])
 # no geral, falamos mais de classe que mode.
 ```
 
+### Importando Banco de dados no R
+
+O jeito mais fácil de importar um banco de dados no R é tendo um arquivo no formato csv (separado por vírgula ou ponto e vírgula) ou txt (separado por espaço ou tabulações). Vamos inicialmente importar dados desse tipo
+
+Acessem o endereço  https://github.com/mgaldino/intro_stat_R/tree/master/Dados
+E baixem o arquivo IDH_Brasil.csv
+Salvem na pasta que quiserem, e vamos então carregar o arquivo no R.
+Para carregar o arquivo, devemos primeiro dizer para o R onde o arquivo está, mudando o diretório padrão para onde salvamos o arquivo.
+Para vocês obterem o dirtório padrão, basta digitarem `r getwd()`
+
+Como meu arquivo está numa outra pasta, vou modificar o diretório padrão, da seguinte forma:
+
+
+```{r}
+setwd("/Users/natalia/Documents/Manoel/curso data analysis/dados")
+```
+
+Se não der nenhuma mensagem, deu certo.
+Então, para carregar o arquivo, usaremos read.table, que como o nome diz, lê uma tablea no R:
+A função read.table pede para especificarmos o nome do arquivo, qual o separaodr (vírgula, tabulação, que é o nosso caso), se a primeira linha é cabeçalho ou não etc.
+
+```{r}
+read.table(file="IDH_Brasil.csv", sep="\t", header=T)
+```
+
+Como vocês podem perceber, o R importou os dados e jogou no console. 
+Mas nós queremos na verdade criar um objeto que contenha os dados. Assim, na verdade preciso atribuir o resultado da importação a um objeto:
+
+```{r}
+idh <- read.table(file="IDH_Brasil.csv", sep="\t", header=T)
+
+head(idh) # primeiras linhas
+dim(idh) # total de linhas e colunas
+```
+
+A tabela contém dados do IDH do Brasil por UF ao longo dos anos (retirei do livro do Jackson Aquino).
+Depois a gente analisar os dados.
+
+Vamos agora importar dados da internet num exercíco.
+Acessem o novo portal da secretaria de segurança pública.
+http://www.ssp.sp.gov.br/novaestatistica/Pesquisa.aspx
+Vão em estatística, procurem o dado que quiserem, salvem em excel, e depois abram no excel (ou openoffice)
+ e salvem em CSV. E tentem importar no R.
+ 
+
 ### carregando bibliotecas
 
 Às vezes queremos fazer alguma coisa que o R não tem uma função pronta. E nós podemos desenvolver nossa  própria função. E a gente pode compartilhar nossas funções com o mundo, seja por mei ode scripts, seja por meio de bibliotecas. As bibliotecas são um conjunto de funções, que alguém fez, e disponibilizou. Para carregá-las, basta instalar o capote que contém a biblioteca, e deois carregas a biblioteca.
@@ -93,15 +138,5 @@ filter(df1, var1 > 2)
 
 ```
 
-### Manipulando banco de dados com Dplyr
 
-Antes de analisar dados, a gente precisa ser capaz de importar os dados no R, manipulá-los, e só então fazer a análise de dados. Em minha experiência, eu gasto mais de 50% do tempo na fase de importação e manipulação, e o restante na análise. Diria que em análise pura, são uns 20%. O resto do tempo é manipulando o banco de dados.
-
-Hoje em dia o R tem uma biblioteca, dplyr, que facilitar muito a manipulação de banco de dados. Vamos portanto introduzir o dplyr para vocês e utilizá-los quase que exclusivamente para manipulação de banco de dados.
-
-Antes, porém, vamos importar alguns bancos de dados, que muitas vezes dão dor de cabeça.
-
-'http://dados.prefeitura.sp.gov.br/api/action/datastore_search_sql?sql=SELECT * from "f944b957-2193-48a4-9068-72a26e6ee577" limit 10'
-
-url_2014 <- "http://dados.prefeitura.sp.gov.br/dataset/f944b957-2193-48a4-9068-72a26e6ee577/resource/fd72d932-fc65-43cc-a74f-f309225f74e8/download/deinfosacadsau2014.csv"
 
