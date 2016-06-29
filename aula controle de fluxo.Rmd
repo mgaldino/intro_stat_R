@@ -123,6 +123,7 @@ while(n < 1 ){
   if(is.na(n)){break}  # breaks when hit enter
 }
 
+n <- 2
 # agora, vamos checar se é par
 if ( n %% 2 == 0) {
   print("número é par")
@@ -131,3 +132,99 @@ if ( n %% 2 == 0) {
     }
 
 ```
+
+*** Funções ***
+
+A criação de funções é fundamental para se utilizar o R de forma produtiva, particularmente em termos de códigos mais simples, reproduíveis e reutilizáveis. Assim, vamos aprender como criar funções
+
+Uma função é um conjunto de instruções que transforma um conjunto de argumentos em um conjunto de outputs.
+Nós conhecemos funções na matemática, digamos, f(x) = x^2. Essa função recebe x como argumento, e retorna o quadrado de x. E é a função "f".
+
+No R, teremos algo parecido: o nome da função, os argumentos da função, o que ela faz, e o que ela retorna (eventualmente pode não retornar nada. Seria uma função invisível. Mas não precisamos nos preocupar com elas aqui)
+
+Nós já utilizamos várias funções do próprio R, e elas facilitam nossa vida. A função sum, por exemplo, economiza código para somar elementos de um vetor.
+
+```{r}
+x <- sample(1:15, size=8)  # vetor de números
+x
+sum(x)  # soma o vetor
+```
+
+Vamos agora criar nossa própria função. Vamos supor que eu quero fazer uma função que multiplica dois números, a e b. E vou chamar essa função de fun_exemplo1. Como fazer isso?
+
+```{r}
+# primeiro, script que faz o que quero para um caso particular
+a <- 10
+b <- 5
+a*b
+
+# se eu mudar a e b, terei que executar todo o escript
+a <- 11
+b <- 6
+a*b
+
+# quero generalizar o script para uma função, de forma que só preciso chamar a função, passando os valores de a e b para ela.
+# criando a função
+fun_exemplo1 <- function(a, b) {
+  a*b
+}
+
+fun_exemplo1 # vendo que a função existe e inspecionando seu código
+
+fun_exemplo1(11, 6) ## executando a função
+
+```
+
+No site do Hadley, http://adv-r.had.co.nz/Functions.html#function-components, temos algumas notas de aulas do R.
+Vou utilizar aqui um pouco do que está lá
+ 
+Todas as funcões no R têm três partes
+ 
+o corpo: que é o código no interior da função
+
+os argumentos (formals): que controlam como voce chama a função
+
+o ambiente: que mapeia onde as variáveis das funções estão localizadas
+
+
+```{r}
+f <- function(x) x^2
+f
+
+## sempre que voce imprime uma função no R, ele mostra esses três componentes da função
+## Quando o ambiente não é mostrado, é porque é o global.
+
+formals(f)
+body(f)
+environment(f)
+
+```
+
+Definindo variáveis livres, formals e variáveis locais
+
+```{r}
+z <- 1
+f <- function(x) {
+  y <- 2 * x 
+  print(x)
+  print(y)
+  print(z)
+}
+
+# Na função acima, x é um argumento da função ou parâmetro formal da função,
+# y é uma variável local (pois é criada e definida no interior da função)
+# e z é uma variável livre (não é criada no interior da função).
+
+f(10)
+```
+
+
+Quando formos rodar (avaliar) essa função, precisamos passar o argumento da função,
+por exemplo, f(10). A função então sabe que y é 20 e pode imprimir o valor de x e de y, 
+mas não de z. O que as regras de escopo devem determinar é onde a função deve olhar
+para determinar quanto é x, y e z.  Se z não tiver sido definido fora da função no 
+ambiente global, o R não conseguirá determinar o seu valor e, portanto, retornará o erro.
+Se vocês rodarem f(10), verão que o R imprime o valor de x, de y e retorna um erro para z.
+Se, por outro lado, criarmos uma outra função, g, definida abaixo, e rodarmos g(10), 
+o R retornará apenas um erro.
+
