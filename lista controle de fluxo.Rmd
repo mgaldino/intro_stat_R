@@ -28,6 +28,8 @@ http://www.ime.usp.br/~macmulti/exercicios/inteiros/index.html
 
 7. Calcule  $\sum_{i=1}^{10} i$ .
 
+
+
 8. Você concorda que posso criar um vetor x, e preencher o vetor com a sequência de números naturais de 1 até 10, usando o comando abaixo?
 ```{r}
 # criando vetor
@@ -46,13 +48,19 @@ for ( i in 1:10) {
 
 11. Calcule $\sum_{i=1}^{3} \sum_{j=1}^2 i +j$.
 
+
+
 12. Calcule $\sum_{i=1}^{20} \sum_{j=1}^5 i^{4}/(3+j)$
+
+
 
 13. Calcule $\sum_{i=1}^{20} \sum_{j=1}^5 i^{4}/(3+i*j)$
 
+
+
 14. Dada duas matrizes A e B, calcule o produto de B por A (nessa ordem), usando foor loop. Assuma que ``` A <- matrix(1:10, nrow=10, ncol=1) ``` e ``` B <- matrix(1:10, nrow=1, ncol=10) ```. Cheque que seu resultado é igual a ```B%*%A```. Você concorda que o produto dos dois vetores é o mesmo que $\sum_{i=1}^{10} x^{2}_{i}$?
 
-15. Dados n e dois números inteiros positivos i e j diferentes de 0, imprimir em ordem crescente os n primeiros naturais que são múltiplos de i ou de j e ou de ambos. Exemplo: Para n = 6 , i = 2 e j = 3 a saída deverá ser : 0,2,3,4,6,8. 
+15. Dados n e dois números inteiros positivos i e j diferentes de 0, imprimir em ordem crescente os n primeiros naturais que são múltiplos de i ou de j e ou de ambos. Exemplo: Para n = 8 , i = 2 e j = 3 a saída deverá ser : 0,2,3,4,6,8. Dica, use outra letra para iterador do loop (ex. k).
      
 16. Dizemos que um número natural é triangular se ele é produto de três números naturais consecutivos. 
     Exemplo: 120 é triangular, pois 4.5.6 = 120.
