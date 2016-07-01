@@ -30,7 +30,7 @@ http://www.ime.usp.br/~macmulti/exercicios/inteiros/index.html
 
 8. Você concorda que posso criar um vetor x, e preencher o vetor com a sequência de números naturais de 1 até 10, usando o comando abaixo?
 ```{r}
-# crianvo vetor
+# criando vetor
 x <- numeric()
 
 # preenchendo vetor
