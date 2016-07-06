@@ -1,0 +1,181 @@
+---
+title: "Aula 1 - Intro R"
+author: "Manoel Galdino"
+date: "27 de maio de 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown
+O R é uma liguagem de programação criada análise estatística. É um software livre e, portanto, podemos usá-lo grauitamente. o nome R vem dos criadores da liguagem, Ross Ihaka e Robert Gentleman, e porque é uma implementação de uma outra liguaguem (proprietária), chamada S. o R é muito parecido com S e muito do código escrito em S roda em R. De todo modo, essa é a explicação para o nome R. E nesse curso iremos aprender a usar o R para trabalhar com dados.
+
+Para Instalar o R, acesso: <http://cran.r-project.org/> e selecione o tipo de instalação adequado ao seu SO.
+Vamos escolher a versão 3.2.0
+
+Uma vez que voce tenha instalado o R, execute o programa.
+
+Voces verão que a interface do R no computador de voces é diferente da minha. Por isso, vamos instalar o RStudio.
+Acessem:  <http://www.rstudio.com/products/rstudio/download/> e insalem o RStudio mais adequado ao seu SO.
+
+Após a instalação, fechem o R e então executem o RStudio.
+O RStudio é uma IDE (Integrated Development Enviroment ), ou seja, um ambiente onde a programação é facilitada para seres humanos usarem linhas de comando de forma mais produtiva. Como o RStudio é grauito e bom, vamos utilizá-lo.
+
+Utilizando o R
+============================================================================
+
+Cliquem em File > New File > R script
+o RStudio dividiu a tela em duas partes. Em cima temos o Script, e em baixo o console. Inicialmente vamos digitar diretamente no console.
+
+No Console, após as mensagens iniciais do R (versão, como buscar ajuda, licença etc.), vemos o seguinte simbolo:
+>
+Quando voce digitar comandos na janela do console e apertar enter, o R interpretará o comando digitado e (se for valido) irá executar o comando e produzir um resultaod (que pode ser visível ou não. A Maioria dos comandos geram outputs visíveis)
+
+Nós podemos utilizar o R como uma simples calculadora, digitando diretamente no console
+
+## R como Calculadora
+
+```{r} 
+1 + 1 
+3+5
+7*3 
+21/7
+21/5
+2^2 # exponenciação
+sqrt(4) # square root ou raiz quadrada
+4^.5 #(4 elevado a meio, ou seja, raiz quadrada de 4). O R tem muitas formas de fazer a mesma coisa.
+pi
+exp(1)
+log(10) # logaritmo natural
+log(10, 10) #logaritmo na base 10
+# etc.
+```
+
+Como voces perceberam, o R sempre dá um output na forma [1] e depois o resultado.
+O [1] significa que é o primeiro elemento do resultado. Isso pode ser útil quando tivermos mais de um elemento de resultado
+Voces entenderam isso melhor mais pra frente, não se preocupem.
+
+## Objetos
+
+No R, tudo é um objeto. Isso sginfica que o R vai armazenar na memória (ram) do computador os objetos que forem criados. Assim, quando nós digitamos "1 + 1", o R abe que "1" é um objeto (de tipo particular, numérico, mas explico depois) e o "+" é um operador binário ( trabalha com dois objetos, por isso binário), que adiciona números.
+
+E nós podemos criar nossos próprios objetos.
+Exemplo:
+
+```{r}
+x <- 1
+print(x)
+x + 1
+x*2
+````
+
+O legal de criar objetos é que eles são armazenados na memória do computador e internamente o R vai associar um endereço a esse objeto. Assim, quando a gente procurar por "x" no R, ele tem o endereço de x e vai buscar na memória o valor de x, e fazer a operação que solicitamso com x (imprimir na tela o valor de x, somar 1 etc.)
+
+Só que quando a gente cria um objeto é preciso dizer pro R que tipo de objeto ele é. Ou, se não dissermos, o R vai tentar advinhar o tipo de objeto e armazená-lo com esse tipo "advinhado". Quase sempre isso funciona e não é preciso nos preocuparmos com isso em geral.
+
+O mais importante é que a classe de um objeto vai determinar o que podemos fazer com ele. Exemplo, a operação de adição é possivel com números, mas não com palavras. O R, portanto, precisa diferenciar número de palavras para saber quando tentar aplicar a operção de adição. Além disso, um númeor inteiro precisa e menos espaço na memória que um número real e, portanto, o R também vai diferenciar (internamente) esses dpois tipos de números, para armazenar objetos na memória de forma mais eficiente.
+
+Os tipos de dados mais comuns no R são
+numeric (números)
+character (textos ou letras)
+logical (assumem dois valores, verdadeiro ou falso)
+
+```{r}
+## Vamos ver esses tipos de dados
+x <- 3
+y <- pi
+z <- "Transparencia Brasil"
+w <- "a"
+k <- TRUE
+u <- FALSE
+p <- T
+mode(x)
+mode(y)
+mode(z)
+mode(w)
+mode(k)
+mode(u)
+mode(p)
+```
+
+No R, existem duas formas de criar objetos
+com o operador "<-" e com o operador "="
+Os dois dão o mesmo resultado e não faz diferença qual voce usa, desde que no seu código voce use sempre o mesmo, para tornar mais fácil a leitura. No curso iremos usar "<-". Eu prefiro esse operador porque, para mim, ele indica que o objeto criado está recebendo um dado conteudo.
+Assim, quando escrevemos: ```x <- 3```, estamos dizendo pro R que o objeto "x", a ser criado, vai receber o conteudo "3". Se eu escrevesse ```x = 3```, o resultado seria o mesmo, mas não fica tão claro que eu tenho que ler da direita pra esquerda, isto é, que estou atribuindo 3 para x. Podemos nos confundir e achar que x está sendo atribuído a 3. Isso é mais fácil de ver se faço as seguintes operações
+
+```{r}
+
+x = 3
+y = 4
+y = x
+# o que print(y) e print(x) devem imprimir?
+
+print(y)
+print(x)
+
+# agora, comparem com o código abaixo
+x <- 3
+y <- 4
+print(x)
+print(y)
+y <- x
+print(y)
+print(x)
+
+## mais fácil de ver o que está acontecendo, certo? (espero que sim!)
+```
+
+# Tipos Lógicos e Operações lógicas
+
+Nós vimos que o R comporta tipos lógicos. Em programação, todo programa de computado tem como base a lógica.
+Assim, é importante que n'so possamos armazenar objetos que sejam verdadeiros ou falsos. E que possamos fazer operaçoes sobre esses objetos
+
+```{r}
+x <- 3
+y <- 3
+# será que y é igual a x?
+x == y
+
+# OS limites de armazenamento do computador
+
+
+x <- 1/3 + 1/3 + 1/3 - 1
+y <- 1/3 + 1/3 - 1 + 1/3
+z <- 1/3 - 1 + 1/3 + 1/3
+w <- -1 + 1/3 + 1/3 + 1/3
+x == y
+x
+y
+z
+w
+z==w
+
+```
+
+No exemplo aciam, usamos o operador _==_ para testar se dois objetos são iguais. Não podemos escrever apenas ```x = y```, porque o R irá entender que estamos atribuindo o valor de y a x (pois já vimos que _=_ e _<-_ são a mesma coisa no R). Assim, no R, usamos _==_ quando queremos saber se dois objetos são exatamente iguais.
+
+Outros operadores lógicos importantes são:
+_!=_ que testa se dois objetos não são iguais (diferentes);
+
+_>_ que testa se um objeto é maior que outro;
+
+_<_ menor.
+
+Vamos a alguns exemplos
+```{r}
+x <- 3
+y <- 4
+x == 3
+x != y
+x < 3
+x > 4
+z <- "abc"
+x > z # o R consegue comparar se um número é maior ou menor que um texto. Portanto, cuidado.
+w <- "A"
+w < z
+```
+
+
+
