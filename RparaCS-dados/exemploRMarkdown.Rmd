@@ -1,0 +1,127 @@
+Exemplo de uso de R + Markdown + knitr
+======================================
+
+Jakson Alves de Aquino
+
+*Markdown* é uma linguagem que permite produzir texto com formatação, como
+**negrito** e *itálico* a partir de arquivos de texto simples. Os arquivos
+*Markdown* têm extensão **md**, mas nós vamos usar arquivos **Rmd**, que
+combinam código *R* com código *Markdown*. Neste arquivo, o código *R* será
+utilizado para produzir uma figura e uma tabela. Antes, porém, vejamos as
+características mais importantes da linguagem *Markdown*.
+
+Na linguagem *Markdown*, a delimitação dos parágrafos é feita por linhas em
+branco. Linhas consecutivas são consideradas parte do mesmo parágrafo.
+
+Com *Markdown* é possível escrever listas. Exemplo de lista não numerada:
+
+  * Este é o primeiro item de uma lista não numerada.
+
+  * Este é o segundo item da lista.
+
+Exemplo de lista numerada (a ordem e o valor dos números não importa):
+
+  1. Primeiro item da lista.
+
+  3. Segundo item da lista.
+
+  1. Terceiro item da lista.
+
+  4. Quarto item da lista.
+
+É possível fazer citações, adicionando-se > no início do parágrafo:
+
+> Citação precedida de sinal de maior. Citação precedida de sinal de maior.
+Citação precedida de sinal de maior. Citação precedida de sinal de maior.
+Citação precedida de sinal de maior. Citação precedida de sinal de maior
+(Fulano de Tal, *Livro inexistente*.)
+
+Imagens podem ser incluídas no documento. Para isso, digite um sinal de
+exclamação seguido do título da figura entre colchetes e do nome do arquivo
+entre parêntesis:
+
+![Logomarca do R](Rlogo.jpg)
+
+```{r config, echo=FALSE, results="hide"}
+# Não embutir imagem PNG no próprio HTML porque o LibreOffice não consegue ler
+# figuras codificadas com o esquema base64.
+library(markdown) # Pacote usado pelo knitr para converter Markdown em HTML
+mko <- options("markdown.HTML.options")[[1]]
+mko <- mko[mko != "base64_images"]
+options(markdown.HTML.options = mko)
+```
+
+Produzindo uma figura
+---------------------
+
+```{r inicio, echo=FALSE, message=FALSE}
+library(xtable)
+library(descr)
+
+# Carregar o banco de dados:
+load("senado2006.RData")
+```
+
+A Figura 1 mostra o histograma da idade dos candidatos ao Senado brasileiro
+nas eleições brasileiras de 2006. Nesse ano, `r nrow(sen)` candidatos
+disputaram o cargo em todo o país.
+
+Figura 1. Idade dos candidatos ao Senado em 2006
+
+```{r histograma, echo=FALSE, results='hide', fig.width=3, fig.height=2.5, dpi=300}
+# Reduzir margens em branco e tamanho da fonte:
+par(mar = c(4, 4, 0, 0) + 0.1, cex = 0.75)
+
+# Plotar a figura:
+hist(sen$idade, main = "", xlab = "Idade", ylab = "Frequência",
+     col = "cornsilk")
+```
+Fonte dos dados: Bolognesi et al. (2007) e TSE (2006).
+
+Produzindo uma tabela
+---------------------
+
+Tabelas podem ser impressas tais como no console do R, como no exemplo a seguir:
+
+```{r tabela1, echo=FALSE}
+freq(sen$escola, plot = FALSE)
+```
+
+Mas também é possível converter alguns objetos em tabelas escritas em código
+*HTML* que serão, de fato, lidas como tabelas por processadores de texto. Para
+isso, podemos usar a função xtable(), que produz um objeto que, quando
+impresso, gera código *LaTeX* para produção de uma tabela. Se passarmos
+o argumento *type = "html"* para a função print(), é gerado código *HTML*.
+Para a função xtable(), estamos passando os seguintes argumentos:
+
+   - *align*: Alinhamento das colunas, sendo "l" esquerda, "r" direita e "c"
+     centro.
+
+   - *display*: Tratamento a ser dado ao valor da célula ao exibi-lo, sendo
+     "s" string, "d" número inteiro, "f" número real.
+
+```{r tabela2, results='asis', echo=FALSE}
+tab1 <- freq(sen$escola, plot = FALSE)
+library(xtable)
+print(xtable(tab1, align = "lrrr", display = c("s", "d", "f", "f")),
+      type = "html")
+```
+Fonte dos dados: Bolognesi et al. (2007) e TSE (2006).
+
+Referências
+-----------
+
+BOLOGNESI, Bruno; GOUVÊA, Júlio; MIRÍADE, Angel. Eleições 2006: Candidatos ao
+poder legislativo no brasil (banco de dados). In: *Consórcio de Informações
+Sociais*. Curitiba: Núcleo de Pesquisa em Sociologia Política Brasileira, 2007.
+Disponível em: <http://www.cis.org.br>. Acesso em: 12/082009.
+
+GRUBER, John. *Markdown: syntax*. Disponível em:
+http://daringfireball.net/projects/markdown/syntax. Acesso em: 21/09/2012.
+
+R Core Team. *R: A language and environment for statistical computing*.
+R Foundation for Statistical Computing: Vienna, Austria, 2012.
+Disponível em: http://www.R-project.org/.
+
+TSE. *Dados*. 2006. Disponível em: <http://www.tse.gov.br>.
+

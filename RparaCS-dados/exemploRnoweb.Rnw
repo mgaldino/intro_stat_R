@@ -1,0 +1,85 @@
+\documentclass[12pt,brazil]{article}
+
+\usepackage{babel}
+\usepackage{geometry}
+\geometry{a4paper,left=3cm,right=2cm,top=2cm,bottom=2cm}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+
+\newcommand{\autor}{Jakson Alves de Aquino}
+\newcommand{\titulo}{Exemplo de uso de R + \LaTeX}
+
+\title{\titulo}
+\author{\autor}
+\date{\today}
+
+\usepackage{setspace}
+
+\usepackage{multirow}
+\usepackage{booktabs}
+
+\usepackage{indentfirst}
+\usepackage[abnt-last-names=bibtex,alf,abnt-full-initials=yes,abnt-year-extra-label=yes]{abntcite}
+
+\begin{document}
+
+<<include=FALSE>>=
+opts_chunk$set(tidy=FALSE)
+@
+
+\maketitle
+
+\LaTeX é uma linguagem que permite produzir texto com formatação, como
+\textbf{negrito} e \textit{itálico} e muito mais a partir de arquivos de texto
+simples. O \textit{R para Cientistas Sociais} foi escrito em \textit{Rnoweb}, um
+documento como este em que se combina código do R com código \LaTeX.\nocite{r}
+
+Na linguagem \LaTeX, a delimitação dos parágrafos é feita por linhas em
+branco. Linhas consecutivas são consideradas parte do mesmo parágrafo.
+
+<<inicio, echo=FALSE, message=FALSE>>=
+library(xtable)
+library(descr)
+
+# Carregar o banco de dados:
+load("senado2006.RData")
+@
+
+\section{Produzindo uma figura}
+
+A Figura~\ref{fig:histograma} mostra o histograma da idade dos candidatos ao
+Senado brasileiro nas eleições brasileiras de 2006. Nesse ano,
+\Sexpr{nrow(sen)} candidatos disputaram o cargo em todo o país.
+
+\begin{figure}[htb]
+    \centering
+    \label{fig:histograma}
+    \caption{Idade dos candidatos ao Senado em 2006}
+<<histograma, results='hide', fig.width=4, fig.height=3, echo=FALSE>>=
+# Reduzir margens em branco:
+par(mar = c(4, 4, 0, 0) + 0.1)
+
+# Plotar a figura:
+hist(sen$idade, main = "", xlab = "Idade", ylab = "Frequência", col = "cornsilk")
+@
+\end{figure}
+
+\section{Produzindo uma tabela}
+
+Tabelas podem ser produzidas corretamente formatadas, como no exemplo a seguir:
+
+<<tabela1, results='asis', echo=FALSE>>=
+tab1 <- freq(sen$escola, plot = FALSE)
+print(xtable(tab1,
+             caption = "Escolaridade dos candidatos ao Senado em 2006",
+             align = "lrrr"), hline.after=c(-1, 0, 7), 
+      caption.placement = "top",
+      add.to.row = list(pos = list(8),
+                        command = "\\hline\\multicolumn{4}{l}{\\footnotesize{Fonte dos dados: \\citeonline{bolognesi07e} e \\citeonline{tse}.}}\n"))
+@
+
+\bibliography{exemplo}
+
+\end{document}
