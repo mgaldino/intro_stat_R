@@ -56,7 +56,7 @@ Passo 4: os números aleatórios são os algarismos da unidade dos números gera
 No exemplo 3,0,2,2,3,9,5,...
 
 # exercício para casa
-1. Implemente uma função "my_rng"", que recebe um semente x, e o número de algorismos n, e retorna um vetor de número aleateorios de tamanho n.
+1. Implemente uma função "my_rng"", que recebe um semente x, e o número de algorismos n, e retorna um vetor de número aleatórios de tamanho n.
 2. faça uma versão 2 da função, "my_rng2", que checa se o número da semente tem dois algarismos, e retorna erro se não for. Dica, consulte o help para "stopifnot"
 3. teste que sua função é de fato aleatória, para n < 10.
 4. Descubra um n para o qual a aleatoriedade dela fica quebrada...
@@ -89,9 +89,7 @@ rbinom(size=1, n=10, p=.5)
 
 ## Normal
 Como sabemos, a distribuição normal é amaplamente utilizada nas análises de dados.
-Em parte pela sua conveniência matemática, e em parte por causa do teorema do limite central. O teorema do limite central diz, basicamente que a soma de variáveis aleatórias iid tendem a se distribuir como uma Normal.
-
-Vamos então entender o TLC com simuação.
+Em parte pela sua conveniência matemática, e em parte por causa do teorema do limite central. 
 
 ```{r}
 
@@ -126,24 +124,41 @@ z <- x + y + w
 hist(z)
 ```
 
-Nós podemos estar interessados em saber quão rápido z se aproxima da normal. Há várias formas de fazer isso.
-Vou fazer aqui algo simples: fazer um teste de qui-quadrado de que as duas distribuições são iguais
+## simulação de viés de variável omitida
+fonte: http://dagitty.net/learn/simpson/
 
-## Simulação para ver quão rápido z se aproxima da normal, à medida que N cresce
 ```{r}
 
-# preciso simular x, y e z para vários tamanhos de n
-# vou usar um loop
-vec_n <- (1:100)*100
-vec_n
-lista <- list()
-z <- list()
-
-for ( i in 1:length(vec_n)) {
-  lista$x[[i]] <- runif(n=vec_n[i])
-  lista$y[[i]] <- runif(n=vec_n[i])
-  lista$w[[i]] <- runif(n=vec_n[i])
-  z[[i]] <- lista$x[[i]] + lista$y[[i]] + lista$w[[i]]
+dgp <- function(N,s,ce){
+	Z1 <- rnorm(N,0,s)
+	Z3 <- rnorm(N,0,s) + Z1
+	Z5 <- rnorm(N,0,s) + Z3
+	U <- rnorm(N,0,s) + Z1
+	Z4 <- rnorm(N,0,s) + Z5 + U
+	Z2 <- rnorm(N,0,s) + Z3 + U
+	X <- rnorm(N,0,s) + U
+	Y <- rnorm(N,0,s) + ce*X + 10*Z5
+	data.frame(Y,X,Z1,Z2,Z3,Z4,Z5)
 }
 
+# 1st parameter: sample size
+# 2nd parameter: noise standard deviation
+# 3rd parameter: true causal effect
+D <- dgp(1000,0.01,1)
+
+
+# unadjusted estimate
+m <- lm(D[,1:2])
+summary(m)
+confint(m,'X')
+
+# adjusted for {Z1}
+m <- lm(D[,c(1,2,3)])
+summary(m)
+confint(m,'X')
+
+# adjusted for {Z1,Z2,Z3,Z4,Z5}
+m <- lm(D[,c(1,2,3,4,5,6,7)])
+summary(m)
+confint(m,'X')
 ```
